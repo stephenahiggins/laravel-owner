@@ -1,0 +1,24 @@
+{
+    "name": "inventive/laravel-owner",
+    "description": "Allow Eloquent models to own each other. Supports many to many relationships.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Stephen",
+            "email": "stephenahiggins@icloud.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Inventive\\LaravelOwner\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Inventive\\LaravelOwner\\OwnerServiceProvider"
+            ]
+        }
+    },
+}

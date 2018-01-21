@@ -1,0 +1,83 @@
+<?php
+
+namespace Inventive\LaravelOwner\Traits;
+
+trait Owns
+{
+  /**
+   * Own the model
+   * @method own
+   * @param  \Illuminate\Database\Eloquent\Model  $model
+   * @return bool
+   */
+  public function own($model)
+  {
+    $ownerModel = config('owner.ownermodel');
+    $checkOwner = $ownerModel::where('owner_id', $this->id)->where('owns_id', $model->id)->get();
+
+    if(count($checkOwner) === 0) // Check if relationship already exists
+    {
+      $newModel = new $ownerModel;
+      $newModel->owner_id = $this->id;
+      $newModel->owner_model = get_class($this);
+      $newModel->owns_id = $model->id;
+      $newModel->owns_model = get_class($model);
+      $newModel->save();
+      return true;
+    }
+    return true;
+  }
+  /**
+   * Disown the model
+   * @method disown
+   * @param  \Illuminate\Database\Eloquent\Model  $model
+   * @return bool
+   */
+  public function disown($model)
+  {
+    $ownerModel = config('owner.ownermodel');
+    $deleteRelationship = $ownerModel::where('owns_id', $model->id)->where('owner_id', $this->id);
+    $deleteRelationship->delete();
+    return true;
+  }
+
+  /**
+   * Query which models the user owns
+   * @method owns
+   * @return \Illuminate\Database\Eloquent\Model
+   */
+  public function owns()
+  {
+    $ownerModel = config('owner.ownermodel');
+    return $ownerModel::where('owner_id', $this->id)->get();
+  }
+
+  /**
+   * Does the user own the parent model?
+   * @method ownsModel
+   * @param  \Illuminate\Database\Eloquent\Model  $model
+   * @return bool
+   */
+  public function ownsModel($model)
+  {
+    $ownerModel = config('owner.ownermodel');
+    return (boolean) $ownerModel::where('owner_id', $this->id)->where('owns_id', $model->id)->first();
+  }
+
+  /**
+   * Query which models the user owns of this type
+   * @method ownsModelType
+   * @param  \Illuminate\Database\Eloquent\Model  $modelType
+   * @return \Illuminate\Database\Eloquent\Model
+   */
+
+  public function ownsModelType($modelType)
+  {
+    $ownerModel = config('owner.ownermodel');
+    if(gettype($modelType) === 'object')
+    {
+      $modelType = get_class($modelType);
+    }
+    return $ownerModel::where('owner_id', $this->id)->where('owns_model', $modelType)->get();
+  }
+}
