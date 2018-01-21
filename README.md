@@ -1,3 +1,5 @@
+![Laravel Owner](http://www.letsbeinventive.co.uk/img/laravel-owner-sm.png)
+
 # Laravel Owner
 
 A simple package that allows Eloquent models to "own" each other, or "be owned" by another model. Supports many to many relationships.
