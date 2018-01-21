@@ -11,6 +11,11 @@ Examples could include:
 3. record being owned by many organisations
 
 ## Installation
+Install using composer: 
+
+```sh
+composer require inventive/laravel-owner
+```
 
 Add the following to `config/app.php`:
 
