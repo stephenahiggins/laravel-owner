@@ -21,5 +21,7 @@
                 "Inventive\\LaravelOwner\\OwnerServiceProvider"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
