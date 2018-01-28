@@ -8,7 +8,9 @@
             "email": "stephenahiggins@icloud.com"
         }
     ],
-    "require": {},
+    "require": {
+        "inventive/laravel-owner": "dev-master"
+    },
     "license": "MIT",
     "autoload": {
         "psr-4": {

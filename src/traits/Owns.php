@@ -1,6 +1,8 @@
 <?php
 
-namespace Inventive\LaravelOwner\Traits;
+namespace App\Models\Fire\Traits;
+
+use Illuminate\Support\Collection;
 
 trait Owns
 {
@@ -49,11 +51,11 @@ trait Owns
   public function owns()
   {
     $ownerModel = config('owner.ownermodel');
-    return $ownerModel::where('owner_id', $this->id)->get();
+    return $this->returnModels($ownerModel::where('owner_id', $this->id)->get());
   }
 
   /**
-   * Does the user own the parent model?
+   * Does the user own the model?
    * @method ownsModel
    * @param  \Illuminate\Database\Eloquent\Model  $model
    * @return bool
@@ -78,6 +80,23 @@ trait Owns
     {
       $modelType = get_class($modelType);
     }
-    return $ownerModel::where('owner_id', $this->id)->where('owns_model', $modelType)->get();
+    return $this->returnModels($ownerModel::where('owner_id', $this->id)->where('owns_model', $modelType)->get());
+  }
+  /**
+   * Query the owned models
+   * @method returnModels
+   * @param  Collection   $ownerModels
+   * @return Collection
+   */
+  private function returnModels(Collection $ownerModels)
+  {
+    $outputCollection = new Collection;
+    foreach($ownerModels as $model)
+    {
+      $ownsModel = $model->owns_model;
+      $outputModel = $ownsModel::find($model->owns_id);
+      $outputCollection->push($outputModel);
+    }
+    return $outputCollection;
   }
 }
