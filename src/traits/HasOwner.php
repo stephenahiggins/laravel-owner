@@ -23,8 +23,7 @@ trait HasOwner
   public function owners()
   {
     $ownerModel = config('owner.ownermodel');
-    $foo = \Inventive\LaravelOwner\Traits\Owns::returnModels($ownerModel::where('owns_id', $this->id)->get());
-    dd($foo);
+    return \Inventive\LaravelOwner\Traits\Owns::returnModels($ownerModel::where('owns_id', $this->id)->get());
   }
   /**
    * Add an owner to a model
