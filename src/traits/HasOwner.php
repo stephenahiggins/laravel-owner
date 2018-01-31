@@ -5,36 +5,34 @@ namespace Inventive\LaravelOwner\Traits;
 trait HasOwner
 {
   /**
-   * Return a collection of all the model's owners
+   * Check if model is owned by another model
+   * @method isOwnedBy
+   * @param  \Illuminate\Database\Eloquent\Model  $model
+   * @return boolean
+   */
+  public function isOwnedBy(\Illuminate\Database\Eloquent\Model $model)
+  {
+    $ownerModel = config('owner.ownermodel');
+    return (boolean) $ownerModel::where('owner_id', $model->id)->where('owns_id', $this->id)->first();
+  }
+  /**
+   * Return a collection of all the model's owner
    * @method owners
    * @return \Illuminate\Database\Eloquent\Model
    */
   public function owners()
   {
     $ownerModel = config('owner.ownermodel');
-    return $ownerModel::where('owns_id', $this->id)->distinct()->get(['owner_id', 'owner_model']);
+    $foo = \Inventive\LaravelOwner\Traits\Owns::returnModels($ownerModel::where('owns_id', $this->id)->get());
+    dd($foo);
   }
-
-  /**
-   * Check if model is owned by another model
-   * @method isOwnedBy
-   * @param  \Illuminate\Database\Eloquent\Model  $model
-   * @return boolean
-   */
-  public function isOwnedBy($model)
-  {
-    $ownerModel = config('owner.ownermodel');
-    return (boolean) $ownerModel::where('owner_id', $model->id)->where('owns_id', $this->id)->first();
-  }
-
   /**
    * Add an owner to a model
    * @method isOwnedBy
    * @param  \Illuminate\Database\Eloquent\Model  $model
    * @return boolean
    */
-
-  public function addOwner($model)
+  public function addOwner(\Illuminate\Database\Eloquent\Model $model)
   {
     $ownerModel = config('owner.ownermodel');
     $checkOwner = $ownerModel::where('owner_id', $this->id)->where('owns_id', $model->id)->get();
@@ -51,20 +49,17 @@ trait HasOwner
     }
     return true;
   }
-
   /**
    * Remove an owner from a model
    * @method isOwnedBy
    * @param  \Illuminate\Database\Eloquent\Model  $model
    * @return boolean
    */
-  public function removeOwner($model)
+  public function removeOwner(\Illuminate\Database\Eloquent\Model $model)
   {
     $ownerModel = config('owner.ownermodel');
-
     $deleteRelationship = $ownerModel::where('owns_id', $this->id)->where('owner_id', $model->id);
     $deleteRelationship->delete();
-
     return true;
   }
 }
