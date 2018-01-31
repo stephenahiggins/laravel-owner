@@ -51,7 +51,7 @@ trait Owns
   public function owns()
   {
     $ownerModel = config('owner.ownermodel');
-    return self::returnModels($ownerModel::where('owner_id', $this->id)->get());
+    return $this->returnOwnsModels($ownerModel::where('owner_id', $this->id)->get());
   }
 
   /**
@@ -80,15 +80,15 @@ trait Owns
     {
       $modelType = get_class($modelType);
     }
-    return $this->returnModels($ownerModel::where('owner_id', $this->id)->where('owns_model', $modelType)->get());
+    return $this->returnOwnsModels($ownerModel::where('owner_id', $this->id)->where('owns_model', $modelType)->get());
   }
   /**
    * Query the owned models
-   * @method returnModels
+   * @method returnOwnsModels
    * @param  Collection   $ownerModels
    * @return Collection
    */
-  public static function returnModels(Collection $ownerModels)
+  private function returnOwnsModels(Collection $ownerModels)
   {
     $outputCollection = new Collection;
     foreach($ownerModels as $model)

@@ -23,7 +23,7 @@ trait HasOwner
   public function owners()
   {
     $ownerModel = config('owner.ownermodel');
-    return \Inventive\LaravelOwner\Traits\Owns::returnModels($ownerModel::where('owns_id', $this->id)->get());
+    return $this->returnOwnerModels($ownerModel::where('owns_id', $this->id)->where('owns_model', get_class($this))->get());
   }
   /**
    * Add an owner to a model
@@ -60,5 +60,22 @@ trait HasOwner
     $deleteRelationship = $ownerModel::where('owns_id', $this->id)->where('owner_id', $model->id);
     $deleteRelationship->delete();
     return true;
+  }
+  /**
+   * Query the owned models
+   * @method returnOwnerModels
+   * @param  Collection   $ownerModels
+   * @return Collection
+   */
+  private function returnOwnerModels(Collection $ownerModels)
+  {
+    $outputCollection = new Collection;
+    foreach($ownerModels as $model)
+    {
+      $ownsModel = $model->owns_model;
+      $outputModel = $ownsModel::find($model->owner_id);
+      $outputCollection->push($outputModel);
+    }
+    return $outputCollection;
   }
 }
