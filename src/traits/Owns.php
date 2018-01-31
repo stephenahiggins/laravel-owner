@@ -12,7 +12,7 @@ trait Owns
    * @param  \Illuminate\Database\Eloquent\Model  $model
    * @return bool
    */
-  public function own($model)
+  public function own(\Illuminate\Database\Eloquent\Model $model)
   {
     $ownerModel = config('owner.ownermodel');
     $checkOwner = $ownerModel::where('owner_id', $this->id)->where('owns_id', $model->id)->get();
@@ -35,7 +35,7 @@ trait Owns
    * @param  \Illuminate\Database\Eloquent\Model  $model
    * @return bool
    */
-  public function disown($model)
+  public function disown(\Illuminate\Database\Eloquent\Model $model)
   {
     $ownerModel = config('owner.ownermodel');
     $deleteRelationship = $ownerModel::where('owns_id', $model->id)->where('owner_id', $this->id);
@@ -51,7 +51,7 @@ trait Owns
   public function owns()
   {
     $ownerModel = config('owner.ownermodel');
-    return $this->returnModels($ownerModel::where('owner_id', $this->id)->get());
+    return self::returnModels($ownerModel::where('owner_id', $this->id)->get());
   }
 
   /**
@@ -60,7 +60,7 @@ trait Owns
    * @param  \Illuminate\Database\Eloquent\Model  $model
    * @return bool
    */
-  public function ownsModel($model)
+  public function ownsModel(\Illuminate\Database\Eloquent\Model $model)
   {
     $ownerModel = config('owner.ownermodel');
     return (boolean) $ownerModel::where('owner_id', $this->id)->where('owns_id', $model->id)->first();
@@ -88,7 +88,7 @@ trait Owns
    * @param  Collection   $ownerModels
    * @return Collection
    */
-  private function returnModels(Collection $ownerModels)
+  public static function returnModels(Collection $ownerModels)
   {
     $outputCollection = new Collection;
     foreach($ownerModels as $model)
