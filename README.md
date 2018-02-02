@@ -14,7 +14,7 @@ Examples could include:
 Install using composer: 
 
 ```sh
-composer require inventive/laravel-owner
+composer require inventive/laravel-owner=dev-master
 ```
 
 Add the following to `config/app.php`:
